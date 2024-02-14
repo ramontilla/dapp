@@ -1,4 +1,5 @@
 import { Component, inject } from '@angular/core';
+import { MatAnchor } from "@angular/material/button";
 import { RouterLink, RouterModule, RouterOutlet } from '@angular/router';
 import { HdWalletMultiButtonComponent } from '@heavy-duty/wallet-adapter-material';
 import { ShyftApiService } from './services/shyft-api.service';
@@ -14,6 +15,7 @@ import { DecimalPipe } from '@angular/common';
     RouterOutlet,
     RouterLink,
     DecimalPipe,
+    MatAnchor,
     HdWalletMultiButtonComponent,
   ],
   selector: 'app-root',
@@ -33,6 +35,17 @@ import { DecimalPipe } from '@angular/common';
           </p>
         </div>
       }
+
+      <nav>
+        <ul class="flex justify-center items-center gap-4">
+          <li>
+            <a [routerLink]="['']" mat-raised-button>Home</a>
+          </li>
+          <li>
+            <a [routerLink]="['settings']" mat-raised-button>Settings</a>
+          </li>
+        </ul>
+      </nav>
     </header>
 
     <main>
