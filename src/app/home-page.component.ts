@@ -1,13 +1,16 @@
 import { Component } from "@angular/core";
+import { HeroSectionComponent } from "./hero-section.component";
+import { FeaturesSectionComponent } from "./features-section.component";
 
 @Component({
     selector: 'app-home-page',
     template: `
     <section>
-        <h2 class="text-center text-3xl">Home Page</h2>
-        <p class="text-center">Welcome to the home page!</p>
+        <app-hero-section></app-hero-section>
+        <app-features-section></app-features-section>
     </section>
     `,
+    imports: [HeroSectionComponent, FeaturesSectionComponent],
     standalone: true,
 })
 export class HomePageComponent {}
