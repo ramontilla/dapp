@@ -27,19 +27,13 @@ import { DecimalPipe } from '@angular/common';
         <hd-wallet-multi-button></hd-wallet-multi-button>
       </div>
 
-      @if (account()) {
-        <div class="absolute top-4 left-4 flex justify-center items-center gap-2">
-          <img [src]="account()?.info?.image" class="w-8 h-8" />
-          <p class="text-2xl font-bold">
-            {{ account()?.balance | number }}
-          </p>
-        </div>
-      }
-
       <nav>
         <ul class="flex justify-center items-center gap-4">
           <li>
             <a [routerLink]="['']" mat-raised-button>Home</a>
+          </li>
+          <li>
+            <a [routerLink]="['balance']" mat-raised-button>Balance</a>
           </li>
           <li>
             <a [routerLink]="['settings']" mat-raised-button>Settings</a>
@@ -53,13 +47,4 @@ import { DecimalPipe } from '@angular/common';
     </main>
   `,
 })
-export class AppComponent {
-  private readonly _shyftApiService = inject(ShyftApiService);
-  private readonly _walletStore = inject(WalletStore);
-  private readonly _publicKey = toSignal(this._walletStore.publicKey$);
-
-  readonly account = computedAsync(
-    () => this._shyftApiService.getAccount(this._publicKey()?.toBase58()),
-    { requireSync: true },
-  );
-}
+export class AppComponent {}
