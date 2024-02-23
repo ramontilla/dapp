@@ -16,11 +16,30 @@ export class ShyftApiService {
         const url = new URL('https://api.shyft.to/sol/v1/wallet/token_balance');
 
         url.searchParams.append('network', 'mainnet-beta');
-        url.searchParams.append('wallet', publicKey)
+        url.searchParams.append('wallet', publicKey);
         url.searchParams.append('token', this._mint);
 
         return this._httpClient
-            .get<{ result: { balance: number; info: { image: string } }}>(
+            .get<{ result: { balance: number; info: { name: string, image: string } }}>(
+                url.toString(),
+                { headers: this._headers }
+            )
+            .pipe(map(({ result }) => result));
+    }
+
+    getTransactions(publicKey: string | null | undefined) {
+        if (!publicKey) {
+            return of([]);
+        }
+
+        const url = new URL('https://api.shyft.to/sol/v1/transaction/history');
+
+        url.searchParams.append('network', 'mainnet-beta');
+        url.searchParams.append('tx_num', '5');
+        url.searchParams.append('account', publicKey);
+
+        return this._httpClient
+            .get<{ result: { status: string; type: string; timestamp: string; actions: { info: { sender: string, receiver: string, amount: number } }[] }[] }>(
                 url.toString(),
                 { headers: this._headers }
             )

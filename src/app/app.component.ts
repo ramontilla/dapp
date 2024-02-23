@@ -30,9 +30,6 @@ import { DecimalPipe } from '@angular/common';
       <nav>
         <ul class="flex justify-center items-center gap-4">
           <li>
-            <a [routerLink]="['']" mat-raised-button>Home</a>
-          </li>
-          <li>
             <a [routerLink]="['balance']" mat-raised-button>Balance</a>
           </li>
           <li>

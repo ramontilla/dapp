@@ -1,10 +1,9 @@
 import { Component, inject } from "@angular/core";
-import { ShyftApiService } from './services/shyft-api.service';
-import { WalletStore } from '@heavy-duty/wallet-adapter';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { computedAsync } from 'ngxtension/computed-async';
+import { WalletStore } from '@heavy-duty/wallet-adapter';
 import { DecimalPipe } from '@angular/common';
-
+import { computedAsync } from 'ngxtension/computed-async';
+import { ShyftApiService } from './services/shyft-api.service';
 @Component({
     selector: 'app-balance-section',
     template: `
@@ -13,14 +12,13 @@ import { DecimalPipe } from '@angular/common';
 
             @if (account()) {
                 <div class="flex justify-center items-center gap-2">
+                    <p class="text-2xl"> {{ account()?.info?.name }} </p>
+                </div>
+                <div class="flex justify-center items-center gap-2">
                     <img [src]="account()?.info?.image" class="w-8 h-8" />
-                    <p class="text-2xl font-bold">
-                        {{ account()?.balance | number }}
-                    </p>
-                    SILLY
+                    <p class="text-xl"> {{ account()?.balance | number }} SILLY </p>
                 </div>
             }
-
         </section>
     `,
     imports: [DecimalPipe],
