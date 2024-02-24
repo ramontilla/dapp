@@ -1,11 +1,9 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { MatAnchor } from "@angular/material/button";
 import { RouterLink, RouterModule, RouterOutlet } from '@angular/router';
 import { HdWalletMultiButtonComponent } from '@heavy-duty/wallet-adapter-material';
 import { ShyftApiService } from './services/shyft-api.service';
-import { WalletStore } from '@heavy-duty/wallet-adapter';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { computedAsync } from 'ngxtension/computed-async';
+import { ConnectionStore } from '@heavy-duty/wallet-adapter';
 import { DecimalPipe } from '@angular/common';
 
 @Component({
@@ -44,4 +42,11 @@ import { DecimalPipe } from '@angular/common';
     </main>
   `,
 })
-export class AppComponent {}
+export class AppComponent implements OnInit {
+  private readonly _shyftApiService = inject(ShyftApiService);
+  private readonly _connectionStore = inject(ConnectionStore);
+
+  ngOnInit() {
+    this._connectionStore.setEndpoint(this._shyftApiService.getEndpoint());
+  }
+}

@@ -10,7 +10,7 @@ import { ShyftApiService } from './services/shyft-api.service';
     standalone: true,
     template: `
         <section class="px-4 py-24">
-            <h2 class="text-center text-3xl">Transacciones</h2>
+            <h2 class="text-center text-3xl mb-8">Transacciones</h2>
 
             @if (transactions()?.length === 0) {
                 <p class="text-center">No hay transacciones.</p>
