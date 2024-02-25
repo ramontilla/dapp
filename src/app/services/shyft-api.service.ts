@@ -47,6 +47,29 @@ export class ShyftApiService {
             .pipe(map(({ result }) => result));
     }
 
+    getAllTokens(publicKey: string | null | undefined) {
+        if (!publicKey) {
+            return of(null);
+        }
+
+        const url = new URL('https://api.shyft.to/sol/v1/wallet/all_tokens');
+
+        url.searchParams.append('network', 'mainnet-beta');
+        url.searchParams.append('wallet', publicKey);
+
+        return this._httpClient
+            .get<{
+                result: {
+                    address: string;
+                    balance: number;
+                    info: { name: string, symbol: string, image: string }
+                }[]
+            }>(url.toString(), {
+                headers: this._headers
+            })
+            .pipe(map(({ result }) => result));
+    }
+
     getEndpoint() {
         const url = new URL('https://rpc.shyft.to');
 
