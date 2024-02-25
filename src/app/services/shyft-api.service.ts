@@ -60,7 +60,7 @@ export class ShyftApiService {
         return this._httpClient
             .get<{
                 result: {
-                    address: string;
+                    address: string;    // Mint del token
                     balance: number;
                     info: { name: string, symbol: string, image: string }
                 }[]

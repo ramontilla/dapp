@@ -1,10 +1,11 @@
-import { Component, EventEmitter, Output, input } from '@angular/core';
+import { Component, EventEmitter, Output, inject, input } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { MatButton } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
 import { MatOption, MatSelect } from '@angular/material/select';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 export interface TransferFormModel {
   memo: string | null;
@@ -31,7 +32,7 @@ export interface TransferFormPayload {
 @Component({
   selector: 'app-transfer-form',
   template: `
-    <form #form="ngForm" class="w-[400px]" (ngSubmit)="onSubmitForm(form)">
+    <form #form="ngForm" class="w-[400px]" (ngSubmit)="onSubmit(form)">
       <mat-form-field class="w-full mb-4">
         <mat-label>Moneda</mat-label>
         <mat-select
@@ -40,11 +41,11 @@ export interface TransferFormPayload {
           required
           #tokenControl="ngModel"
         >
-          @for (item of tokens(); track item) {
-            <mat-option [value]="item">
+          @for (token of tokens(); track token) {
+            <mat-option [value]="token">
               <div class="flex items-center gap-2">
-                <img [src]="item.info.image" class="rounded-full w-8 h-8" />
-                <span>{{ item.info.symbol }}</span>
+                <img [src]="token.info.image" class="rounded-full w-8 h-8" />
+                <span>{{ token.info.symbol }}</span>
               </div>
             </mat-option>
           }
@@ -95,6 +96,7 @@ export interface TransferFormPayload {
           placeholder="Ingresa el monto."
           [(ngModel)]="model.amount"
           required
+          [disabled]="disabled()"
           #amountControl="ngModel"
           [max]="tokenControl.value?.balance ?? undefined"
         />
@@ -139,8 +141,24 @@ export interface TransferFormPayload {
         }
       </mat-form-field>
 
-      <footer class="flex justify-center">
-        <button type="submit" mat-raised-button color="primary">Enviar</button>
+      <footer class="flex justify-center gap-4">
+        <button
+          type="submit"
+          mat-raised-button
+          color="primary"
+          [disabled]="disabled()"
+        >
+          Enviar
+        </button>
+        <button
+          type="button"
+          mat-raised-button
+          color="warn"
+          (click)="onCancel()"
+          [disabled]="disabled()"
+        >
+          Cancelar
+        </button>
       </footer>
     </form>
   `,
@@ -156,9 +174,18 @@ export interface TransferFormPayload {
   ],
 })
 export class TransferFormComponent {
+  private readonly _matSnackBar = inject(MatSnackBar);
+
   readonly tokens = input<
-    { address: string; balance: number; info: { name: string; symbol: string; image: string } }[]
+    {
+      address: string;
+      balance: number;
+      info: { name: string; symbol: string; image: string };
+    }[]
   >([]);
+  readonly disabled = input<boolean>(false);
+  @Output() readonly sendTransfer = new EventEmitter<TransferFormPayload>();
+  @Output() readonly cancelTransfer = new EventEmitter();
 
   readonly model: TransferFormModel = {
     amount: null,
@@ -167,9 +194,7 @@ export class TransferFormComponent {
     token: null,
   };
 
-  @Output() readonly submitForm = new EventEmitter<TransferFormPayload>();
-
-  onSubmitForm(form: NgForm) {
+  onSubmit(form: NgForm) {
     if (
       form.invalid ||
       this.model.amount === null ||
@@ -177,14 +202,21 @@ export class TransferFormComponent {
       this.model.receiverAddress == null ||
       this.model.token === null
     ) {
-      console.error('El formulario es inválido.');
+      this._matSnackBar.open('El formulario es inválido.', 'Cerrar', {
+        duration: 4000,
+        horizontalPosition: 'end',
+      });
     } else {
-      this.submitForm.emit({
+      this.sendTransfer.emit({
         amount: this.model.amount,
         memo: this.model.memo,
         receiverAddress: this.model.receiverAddress,
         token: this.model.token,
       });
     }
+  }
+
+  onCancel() {
+    this.cancelTransfer.emit();
   }
 }
