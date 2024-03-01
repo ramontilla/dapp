@@ -18,8 +18,8 @@ import { DecimalPipe } from '@angular/common';
   ],
   selector: 'app-root',
   template: `
-    <header class="px-16 pt-20 pb-8 relative">
-      <h1 class="text-center text-5xl mb-4"> Heavy Wallet</h1>
+    <header class="px-16 pt-8 pb-8 relative">
+      <h1 class="text-center text-5xl mb-8"> Heavy Wallet</h1>
 
       <div class="flex justify-center mb-4">
         <hd-wallet-multi-button></hd-wallet-multi-button>
